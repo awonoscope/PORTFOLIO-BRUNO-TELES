@@ -20,7 +20,7 @@ if [[ "${1:-}" == "--init" ]]; then
     echo "[AEGIS] ERRO: rebaseline bloqueado. Use AEGIS_REBASELINE_APPROVED=yes para autorizar." >&2
     exit 1
   fi
-  find AEGIS -type f ! -path "AEGIS/logs/*" -print0 | sort -z | xargs -0 sha256sum > "$BASELINE_FILE"
+  find AEGIS -type f ! -path "AEGIS/logs/*" ! -path "AEGIS/checkpoints/*" -print0 | sort -z | xargs -0 sha256sum > "$BASELINE_FILE"
   chmod 400 "$BASELINE_FILE"
   echo "[AEGIS] baseline criada em $BASELINE_FILE"
   exit 0
@@ -32,7 +32,7 @@ if [[ ! -f "$BASELINE_FILE" ]]; then
 fi
 
 tmp_file="$(mktemp)"
-find AEGIS -type f ! -path "AEGIS/logs/*" -print0 | sort -z | xargs -0 sha256sum > "$tmp_file"
+find AEGIS -type f ! -path "AEGIS/logs/*" ! -path "AEGIS/checkpoints/*" -print0 | sort -z | xargs -0 sha256sum > "$tmp_file"
 
 if diff -u "$BASELINE_FILE" "$tmp_file"; then
   echo "[AEGIS] integridade OK"

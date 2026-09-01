@@ -39,6 +39,16 @@ contains_shell_meta() {
   return 1
 }
 
+has_url_arg() {
+  local arg
+  for arg in "$@"; do
+    if [[ "$arg" =~ ^https?:// ]] || [[ "$arg" =~ ^ftp:// ]] || [[ "$arg" =~ ^s3:// ]]; then
+      return 0
+    fi
+  done
+  return 1
+}
+
 cmd_name="$1"
 shift
 cmd_base="$(basename "$cmd_name")"
@@ -68,6 +78,13 @@ if contains_shell_meta "$cmd_base" "$@"; then
   ts="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
   printf '{"timestamp":"%s","source":"aegis","event":"shell_meta_blocked","action":"%s","status":"denied"}\n' "$ts" "$escaped_cmd" >> "$LOG_FILE"
   echo "[AEGIS] BLOQUEADO: metacaracteres de shell não permitidos." >&2
+  exit 2
+fi
+
+if [[ "${AEGIS_BLOCK_URL_ARGS:-1}" == "1" ]] && has_url_arg "$@"; then
+  ts="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+  printf '{"timestamp":"%s","source":"aegis","event":"remote_url_blocked","action":"%s","status":"denied"}\n' "$ts" "$escaped_cmd" >> "$LOG_FILE"
+  echo "[AEGIS] BLOQUEADO: argumentos remotos (URL) não permitidos." >&2
   exit 2
 fi
 

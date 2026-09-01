@@ -29,4 +29,9 @@ if [[ "${AEGIS_ALLOW_ONLY_LOCAL_INPUT:-1}" == "1" ]]; then
   fi
 fi
 
+if [[ "${AEGIS_TELEMETRY_MODE:-local-only}" != "local-only" ]]; then
+  echo "[AEGIS] ERRO: telemetria deve permanecer em modo local-only." >&2
+  exit 1
+fi
+
 echo "[AEGIS] preflight OK - sandbox e política validadas."

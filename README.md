@@ -8,6 +8,11 @@ Foi adicionada a estrutura de segurança local em:
 Guia completo:
 - `/home/runner/work/PORTFOLIO-BRUNO-TELES/PORTFOLIO-BRUNO-TELES/AEGIS/README.md`
 
+Capacidades novas do AEGIS:
+- execução local com bloqueio de comandos remotos/URLs,
+- checkpoint seguro + restore validado por hash,
+- guarda contínua com auto-recuperação e telemetria local-only.
+
 ## Monitoramento Graphify + Comunicação Hermes Agent (Terminal)
 
 Este documento implementa o plano operacional para monitorar o Graphify e acionar o Hermes Agent via terminal, com foco em observabilidade, rastreabilidade e resposta a incidentes.
