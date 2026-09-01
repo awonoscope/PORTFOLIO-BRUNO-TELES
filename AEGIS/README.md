@@ -20,9 +20,9 @@ No terminal, execute exatamente nesta ordem:
 cd /home/runner/work/PORTFOLIO-BRUNO-TELES/PORTFOLIO-BRUNO-TELES
 chmod +x AEGIS/bin/*.sh
 AEGIS/bin/preflight.sh
-AEGIS/bin/check-integrity.sh --init
-AEGIS/bin/secure-run.sh "echo 'verificacao local ativa'"
-AEGIS/bin/secure-run.sh "wget https://example.com"   # deve bloquear
+AEGIS_REBASELINE_APPROVED=yes AEGIS/bin/check-integrity.sh --init
+AEGIS/bin/secure-run.sh echo verificacao-local-ativa
+AEGIS/bin/secure-run.sh wget https://example.com   # deve bloquear
 AEGIS/bin/check-integrity.sh
 ```
 
@@ -30,9 +30,10 @@ AEGIS/bin/check-integrity.sh
 1. **Sandbox first**: execução permitida apenas em caminho sandbox esperado.
 2. **Sem upload/download**: bloqueio de comandos comuns de transferência (`curl`, `wget`, `scp`, etc.).
 3. **Entrada local**: política para evitar execução acoplada a proxies remotos.
-4. **Timeout + retry**: cada comando tem timeout e retentativas controladas.
-5. **Auditoria obrigatória**: cada ação é registrada com `timestamp`, `action`, `status` e `retries`.
-6. **Integridade**: valida se arquivos AEGIS foram alterados fora do esperado.
+4. **Execução sem shell inline**: comando roda por argumentos, reduzindo bypass por expansão de shell.
+5. **Timeout + retry**: cada comando tem timeout e retentativas controladas.
+6. **Auditoria obrigatória**: cada ação é registrada com `timestamp`, `action`, `status` e `retries`.
+7. **Integridade com bloqueio de rebaseline**: baseline só é recriada com autorização explícita.
 
 ## Estratégia de agentes Copilot (sem duplicação)
 Use agentes distintos com responsabilidades separadas:

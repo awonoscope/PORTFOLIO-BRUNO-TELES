@@ -1,5 +1,13 @@
 # PORTFOLIO-BRUNO-TELES
 
+## AEGIS
+
+Foi adicionada a estrutura de segurança local em:
+`/home/runner/work/PORTFOLIO-BRUNO-TELES/PORTFOLIO-BRUNO-TELES/AEGIS`
+
+Guia completo:
+- `/home/runner/work/PORTFOLIO-BRUNO-TELES/PORTFOLIO-BRUNO-TELES/AEGIS/README.md`
+
 ## Monitoramento Graphify + Comunicação Hermes Agent (Terminal)
 
 Este documento implementa o plano operacional para monitorar o Graphify e acionar o Hermes Agent via terminal, com foco em observabilidade, rastreabilidade e resposta a incidentes.

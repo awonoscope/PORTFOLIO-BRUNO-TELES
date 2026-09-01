@@ -3,11 +3,25 @@ set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 BASELINE_FILE="$REPO_ROOT/AEGIS/logs/integrity.sha256"
+POLICY_FILE="$REPO_ROOT/AEGIS/config/security-policy.env"
+
+if [[ ! -f "$POLICY_FILE" ]]; then
+  echo "[AEGIS] ERRO: policy não encontrada." >&2
+  exit 1
+fi
+
+# shellcheck disable=SC1090
+source "$POLICY_FILE"
 
 cd "$REPO_ROOT"
 
 if [[ "${1:-}" == "--init" ]]; then
+  if [[ "${AEGIS_BASELINE_LOCK:-1}" == "1" && "${AEGIS_REBASELINE_APPROVED:-no}" != "yes" ]]; then
+    echo "[AEGIS] ERRO: rebaseline bloqueado. Use AEGIS_REBASELINE_APPROVED=yes para autorizar." >&2
+    exit 1
+  fi
   find AEGIS -type f ! -path "AEGIS/logs/*" -print0 | sort -z | xargs -0 sha256sum > "$BASELINE_FILE"
+  chmod 400 "$BASELINE_FILE"
   echo "[AEGIS] baseline criada em $BASELINE_FILE"
   exit 0
 fi
