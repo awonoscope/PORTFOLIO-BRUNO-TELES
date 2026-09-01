@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [[ -z "${AEGIS_DEVICE_SECRET:-}" ]]; then
+  echo "AEGIS: AEGIS_DEVICE_SECRET não definido. Push bloqueado."
+  exit 1
+fi
+
+if [[ -z "${AEGIS_ALLOWED_DEVICE_HASH:-}" ]]; then
+  echo "AEGIS: AEGIS_ALLOWED_DEVICE_HASH não definido. Push bloqueado."
+  exit 1
+fi
+
+if [[ ! -f /etc/machine-id ]]; then
+  echo "AEGIS: /etc/machine-id indisponível. Push bloqueado."
+  exit 1
+fi
+
+current_hash="$(cat /etc/machine-id | sha256sum | awk '{print $1}')"
+
+if [[ "$current_hash" != "$AEGIS_ALLOWED_DEVICE_HASH" ]]; then
+  echo "AEGIS: dispositivo não autorizado. Push bloqueado."
+  exit 1
+fi
+
+if ! uname -a | tr '[:upper:]' '[:lower:]' | grep -q "linux"; then
+  echo "AEGIS: ambiente não suportado para este hook. Push bloqueado."
+  exit 1
+fi
+
+echo "AEGIS: validação local aprovada. Push liberado."

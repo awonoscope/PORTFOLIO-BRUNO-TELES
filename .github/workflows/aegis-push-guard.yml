@@ -1,0 +1,30 @@
+name: AEGIS Push Guard
+
+on:
+  push:
+    branches:
+      - '**'
+
+permissions:
+  contents: read
+
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run AEGIS guard
+        run: .github/scripts/aegis_push_guard.sh
+        env:
+          AEGIS_AUTHORIZED_ACCOUNTS_FILE: .github/security/authorized_accounts.txt
+          AEGIS_AUDIT_FILE: aegis-audit/audit.json
+
+      - name: Upload audit artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: aegis-audit
+          path: aegis-audit/audit.json
+          if-no-files-found: warn
